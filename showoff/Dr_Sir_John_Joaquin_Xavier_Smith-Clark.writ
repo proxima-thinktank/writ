@@ -1,0 +1,93 @@
+#!writ +v0a.0.1
+
+# An Atom has the following shape in pseudo-code:
+#
+# {{{
+# data Atom = Atom Face (Maybe Body)
+# data Face = Face Identifier (Maybe Value)
+# data Body = List Atom
+# }}}
+#
+# Thus,
+# {{{
+# Atom ~~
+#   ( (Identifier, (Maybe Value))
+#   , Maybe (List Atom))
+# }}}
+
+---
+
+Person:
+  # Identifiers carry no semantics until qualified.
+  # `Name` means nothing; `Person.Name` and 
+  # `Organization.Name` do, however.
+  #
+  # An index may be given _both_ a face-value (here,
+  # `"Dr Sir John Joaquin Xavier Smith-Clark"`) _and_
+  # substructural values--e.g.,
+  # `Name.{Title,Given,Middle,Family}`.
+  - Name: "Dr Sir John Joaquin Xavier Smith-Clark"
+    # Instead of embodying a single face-value, an index
+    # _may_ supply more than one face-value within
+    # square brackets in the form of an _ordered list_.
+    - Title: ["Dr", "Sir"]
+    - Given: "John"
+    - Middle: ["Joaquin", "Xavier"]
+    - Family: "Smith-Clark"
+    # In addition, an index _may_ supply more than one
+    # face-value within braces in the form of an
+    # _unordered list_.
+    - Nick: {"Jo-jo", "Xave", "Sir J"}
+  # An index _may_ not provide a face-value at all!
+  - Birth: 
+    - Date: ["2012-02-29", "29.02.2012"]
+      - Year: 2012
+      - Month: 2
+      - Day: 29
+    - Time: "13:24 GMT"
+      - Hour: 13
+      - Minute: 24
+      # If part of a compound value is left out on
+      # purpose, it _must_ take on the `no`-identity
+      # face-value.
+      - Second: no
+      # If a face-value is a number without leading
+      # zeros _or_ is a valid alphanumeric index
+      # with a leading alphabetic rune, it may appear
+      # as a bare word.
+      # **CAUTION:** some bare words are reserved,
+      #   though these are always of one of the following
+      #   forms: 
+      #     - postfixed by a single underscore,
+      #     - circumfixed by double underscores,
+      #     - all capitals/majiscules/upper case with
+      #       words optionally separated by underscore
+      #       (at the time of declaration; a usage _must_
+      #       match its declaration.)
+      # If a facevalue is qualified by the index for
+      # which it supplies its value, it may be
+      # preceded by a low-dot `.` (period) instead.
+      #
+      # For example, the below line is equivalent to
+      # `- TimeZone: TimeZone.GMT`.
+      - TimeZone: .GMT  # `GMT` is reserved.
+    - Location: "London, England"
+      - City: .London
+      - State: .England
+  - Contact:
+    - Phone: "+1 (585) 555-1212 x1337 #42*"
+      - Country: UnitedStatesOfAmerica
+      - Number: "5855551212"
+      - Extension: "1337"
+      - Code: "#42*"
+    # Note: if XSLT-like capabilites are supported by
+    # a consumer system, a facevalue _may_ be converted
+    # to a conglomerate form. This allows for brevity
+    # of communications between systems which "speak"
+    # the "same language".
+    - Email: "dr.jjxsc@im-a-knight.uk"
+    #  becomes, when re-written via "XSLT":
+    # - Handle: "dr.jjxsc"
+    # - Domain: "im-a-knight.uk"
+    # # - TLD: .UK
+    # # - Name: "im-a-knight"
